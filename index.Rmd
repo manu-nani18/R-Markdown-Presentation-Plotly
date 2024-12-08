@@ -1,0 +1,55 @@
+---
+title: "Interactive Plots with Plotly"
+author: "Mohan R"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# Introduction
+This presentation features interactive plots created with Plotly.
+
+## **1. Heatmap - Daily Ozone Levels in New York (May to September 1973)**
+
+```{r heatmap, message=FALSE}
+library(datasets)
+library(plotly)
+library(reshape2)
+
+# Load and prepare the dataset
+data("airquality")
+airquality$Month = as.factor(airquality$Month)
+ozone_daily = airquality[, c(1, 5, 6)]
+ozone_daily = dcast(ozone_daily, Day ~ Month, value.var = "Ozone")
+ozone_daily = as.matrix(ozone_daily[,-1])
+colnames(ozone_daily) = c("May", "June", "July", "August", "September")
+
+# Create Heatmap
+plot_ly(
+  z = ozone_daily, 
+  colorscale = "Hot", 
+  x = colnames(ozone_daily), 
+  type = "heatmap",
+  colorbar = list(title = "Ozone Levels (ppb)")
+) %>% layout(
+  title = "Daily Ozone Levels in New York, May to September 1973", 
+  xaxis = list(title = "Month"), 
+  yaxis = list(title = "Day")
+)
+
+
+library(datasets)
+library(plotly)
+
+# Load and plot the dataset
+data("uspop")
+plot_ly(
+  x = ~time(uspop), 
+  y = ~uspop, 
+  type = "scatter", 
+  mode = "lines"
+) %>% layout(
+  title = "U.S. Population (1790-1970)", 
+  xaxis = list(title = "Year"), 
+  yaxis = list(title = "U.S. Population (millions)")
+)
+
